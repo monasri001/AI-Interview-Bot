@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation } from "wouter";
 import { motion, AnimatePresence } from "framer-motion";
-import { Mic, Loader2, StopCircle, ArrowRight, CheckCircle2, BrainCircuit } from "lucide-react";
+import { Mic, Loader2, StopCircle, ArrowRight, CheckCircle2, BrainCircuit, SkipForward } from "lucide-react";
 import { useInterview } from "@/context/InterviewContext";
 import { useTranscribeAudio, useEvaluateAnswer, useGetNextQuestion, useTextToSpeech } from "@workspace/api-client-react";
 import { useVoiceRecorder } from "@workspace/integrations-openai-ai-react";
@@ -25,7 +25,8 @@ export default function Interview() {
   const [isAiSpeaking, setIsAiSpeaking] = useState(false);
 
   // Hook integrations
-  const { isRecording, start, stop, blob, clear } = useVoiceRecorder() || { isRecording: false, start: () => {}, stop: () => {}, blob: null, clear: () => {} };
+  const { state: recState, startRecording, stopRecording } = useVoiceRecorder();
+  const isRecording = recState === "recording";
   const { mutateAsync: ttsAPI } = useTextToSpeech();
   const { mutateAsync: transcribeAPI } = useTranscribeAudio();
   const { mutateAsync: evaluateAPI } = useEvaluateAnswer();
@@ -89,32 +90,29 @@ export default function Interview() {
     if (isAiSpeaking) stopAiSpeaking();
 
     if (isRecording) {
-      stop();
       setStep('processing');
-      handleSubmission();
+      const audioBlob = await stopRecording();
+      handleSubmission(audioBlob);
     } else {
-      clear();
       setTranscript("");
       try {
-        await start();
+        await startRecording();
         setStep('recording');
-      } catch (err) {
+      } catch {
         toast({ title: "Microphone Access Denied", description: "Please allow microphone access to practice.", variant: "destructive" });
       }
     }
   };
 
-  const handleSubmission = async () => {
+  const handleSubmission = async (audioBlob: Blob) => {
     try {
-      // Small delay to ensure blob is populated by the hook
-      await new Promise(r => setTimeout(r, 500));
-      if (!blob) {
+      if (!audioBlob || audioBlob.size === 0) {
         toast({ title: "Recording failed", description: "No audio captured. Please try again.", variant: "destructive" });
         setStep('waiting');
         return;
       }
 
-      const base64Audio = await blobToBase64(blob);
+      const base64Audio = await blobToBase64(audioBlob);
       
       // 1. Transcribe
       const transcribeRes = await transcribeAPI({ data: { audio: base64Audio } });
@@ -169,6 +167,45 @@ export default function Interview() {
     } catch (error) {
       toast({ title: "Network Error", description: "Failed to fetch next question.", variant: "destructive" });
       setStep('feedback'); // revert
+    }
+  };
+
+  const handleSkipQuestion = async () => {
+    if (isAiSpeaking) stopAiSpeaking();
+    if (isRecording) stop();
+
+    // Record a skipped entry so the progress/evaluations stay in sync
+    recordEvaluation({
+      score: 0,
+      strengths: "Question was skipped.",
+      improvements: "Try to attempt every question for a more complete assessment.",
+      sampleBetterAnswer: "",
+      feedbackText: "You skipped this question.",
+    });
+
+    setStep('processing');
+
+    if (state.questionNumber >= state.totalQuestions) {
+      endInterview();
+      setLocation("/report");
+      return;
+    }
+
+    try {
+      const res = await nextQuestionAPI({
+        data: {
+          domain: state.domain!,
+          questionNumber: state.questionNumber,
+          previousQuestions: state.history,
+        }
+      });
+      nextQuestion(res.question, res.isLast);
+      setTranscript("");
+      clear();
+      setStep('playing_question');
+    } catch {
+      toast({ title: "Network Error", description: "Failed to fetch next question.", variant: "destructive" });
+      setStep('waiting');
     }
   };
 
@@ -320,7 +357,7 @@ export default function Interview() {
               <p>Analyzing response...</p>
             </div>
           ) : (
-            <div className="flex flex-col items-center">
+            <div className="flex flex-col items-center gap-6">
               <div className="relative">
                 {isRecording && (
                   <motion.div 
@@ -333,17 +370,28 @@ export default function Interview() {
                   size="icon"
                   variant={isRecording ? "destructive" : "default"}
                   onClick={handleToggleRecord}
+                  disabled={step === 'playing_question'}
                   className={cn(
                     "relative z-10 transition-all duration-300 w-24 h-24 rounded-full",
-                    !isRecording && "hover:scale-105 shadow-[0_0_30px_rgba(0,229,255,0.3)]"
+                    !isRecording && step !== 'playing_question' && "hover:scale-105 shadow-[0_0_30px_rgba(0,229,255,0.3)]"
                   )}
                 >
                   {isRecording ? <StopCircle className="w-10 h-10" /> : <Mic className="w-10 h-10" />}
                 </Button>
               </div>
-              <p className="mt-6 text-muted-foreground font-medium">
-                {isRecording ? "Tap to Stop & Submit" : "Tap to Answer"}
+              <p className="text-muted-foreground font-medium">
+                {step === 'playing_question' ? "AI is speaking..." : isRecording ? "Tap to Stop & Submit" : "Tap to Answer"}
               </p>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={handleSkipQuestion}
+                disabled={step === 'processing'}
+                className="text-muted-foreground hover:text-foreground gap-2 opacity-70 hover:opacity-100 transition-opacity"
+              >
+                <SkipForward className="w-4 h-4" />
+                Skip this question
+              </Button>
             </div>
           )}
         </div>
