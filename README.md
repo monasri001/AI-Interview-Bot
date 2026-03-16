@@ -190,11 +190,6 @@ If you'd like to improve the project:
 2. Create a new branch
 3. Submit a pull request
 
----
-
-# 📜 License
-
-This project is open-source and available under the MIT License.
 
 ---
 
