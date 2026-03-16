@@ -1,0 +1,203 @@
+# 🎤 AI Interview Practice Voice Bot for Indians
+
+An AI-powered voice-based interview simulator designed to help Indian students practice technical and HR interviews using real-time voice interaction and AI feedback.
+
+This project simulates a real interviewer by asking questions through voice, listening to the candidate’s spoken answers, evaluating them using AI, and providing constructive feedback with scores and suggestions.
+
+---
+
+# 🚀 Features
+
+### 🎙 Voice-Based Interview
+
+* AI asks interview questions using text-to-speech.
+* Users answer using their microphone.
+* Speech is converted to text using Speech Recognition.
+
+### 🤖 AI Interviewer
+
+* Generates interview questions dynamically.
+* Supports multiple interview domains:
+
+  * Software Development
+  * Data Science
+  * Artificial Intelligence / Machine Learning
+  * HR / Behavioral Interviews
+  * General Aptitude
+
+### 📊 Intelligent Answer Evaluation
+
+The AI evaluates answers based on:
+
+* Communication clarity
+* Technical correctness
+* Confidence level
+* Completeness of response
+
+### 🧠 AI Feedback System
+
+After each response, the system provides:
+
+* Score out of 10
+* Strengths in the answer
+* Areas for improvement
+* Suggested better answer
+
+### 🔊 Voice Feedback
+
+AI converts feedback into speech so the system behaves like a real interviewer.
+
+### 📈 Interview Progress Tracking
+
+* Question counter
+* Interview progress
+* Final performance summary
+
+---
+
+# 🛠 Tech Stack
+
+### Backend
+
+* Python
+* Flask
+
+### Frontend
+
+* HTML
+* CSS
+* JavaScript
+* Bootstrap
+
+### AI & Voice Technologies
+
+* OpenAI GPT API
+* SpeechRecognition (Speech-to-Text)
+* gTTS / pyttsx3 (Text-to-Speech)
+
+### Deployment
+
+* Replit
+
+---
+
+# 📂 Project Structure
+
+```
+AI-Interview-Voice-Bot
+│
+├── app.py
+├── requirements.txt
+├── .env
+│
+├── templates
+│   └── index.html
+│
+├── static
+│   ├── style.css
+│   └── script.js
+│
+└── README.md
+```
+
+---
+
+# ⚙️ Installation
+
+## 1️⃣ Clone the Repository
+
+```
+git clone https://github.com/yourusername/AI-Interview-Voice-Bot.git
+cd AI-Interview-Voice-Bot
+```
+
+---
+
+## 2️⃣ Install Dependencies
+
+```
+pip install -r requirements.txt
+```
+
+---
+
+## 3️⃣ Set Environment Variables
+
+Create a `.env` file and add:
+
+```
+OPENAI_API_KEY=your_openai_api_key
+```
+
+---
+
+## 4️⃣ Run the Application
+
+```
+python app.py
+```
+
+Open the browser:
+
+```
+http://localhost:5000
+```
+
+---
+
+# 🎯 How It Works
+
+1. User selects an interview domain.
+2. AI generates the first interview question.
+3. AI asks the question using voice.
+4. User answers using microphone.
+5. Speech is converted to text.
+6. AI evaluates the response.
+7. AI gives feedback and score.
+8. The next interview question appears.
+
+---
+
+# 📸 Future Enhancements
+
+Possible improvements for the project:
+
+* AI interviewer avatar
+* Emotion detection during interview
+* Resume-based question generation
+* Interview difficulty levels
+* Performance analytics dashboard
+* Multilingual support (English + Indian languages)
+
+---
+
+# 🎓 Use Cases
+
+* Interview preparation for students
+* Placement training programs
+* Technical mock interviews
+* HR practice sessions
+
+---
+
+# 🤝 Contribution
+
+Contributions are welcome!
+
+If you'd like to improve the project:
+
+1. Fork the repository
+2. Create a new branch
+3. Submit a pull request
+
+---
+
+# 📜 License
+
+This project is open-source and available under the MIT License.
+
+---
+
+# ⭐ Support
+
+If you found this project helpful, consider giving it a star ⭐ on GitHub.
