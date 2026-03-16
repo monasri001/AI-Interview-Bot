@@ -1,0 +1,146 @@
+PROJECT TITLE: AI Interview Practice Voice Bot for Indians
+
+Objective:
+Build a full-stack AI voice-based interview practice assistant designed for Indian students preparing for technical and HR interviews. The system should simulate a real interviewer that asks questions through voice, listens to the candidate's spoken answers, evaluates them using AI, and provides feedback.
+
+Tech Stack Requirements:
+Backend: Python + Flask
+Frontend: HTML + CSS + JavaScript
+Speech-to-Text: OpenAI Whisper or SpeechRecognition
+Text-to-Speech: gTTS or pyttsx3
+AI Model: OpenAI GPT API
+Optional UI Enhancement: Bootstrap
+Deployment-ready for Replit
+
+Core Features:
+
+1. Voice Interview Interaction
+
+* The AI asks interview questions using text-to-speech.
+* The user answers using their microphone.
+* Convert speech input to text using SpeechRecognition or Whisper.
+
+2. AI Interview Question Generator
+   The AI should generate interview questions based on selected domain:
+
+* Software Developer
+* Data Science
+* AI / Machine Learning
+* HR / Behavioral
+* General Aptitude
+
+3. Answer Evaluation
+   The AI should evaluate responses based on:
+
+* Communication clarity
+* Technical correctness
+* Confidence
+* Completeness of answer
+
+4. Feedback System
+   After each answer, provide:
+
+* Score out of 10
+* Strengths
+* Areas for improvement
+* Suggested better answer
+
+5. Interview Session Flow
+   Step 1: User selects interview domain
+   Step 2: AI asks first question
+   Step 3: User answers via microphone
+   Step 4: AI converts speech to text
+   Step 5: AI evaluates answer
+   Step 6: AI provides spoken feedback
+   Step 7: Next question appears
+
+6. Voice System Requirements
+   Use microphone input through browser.
+   Use JavaScript Web Speech API for recording if possible.
+   Fallback: upload audio file.
+
+7. UI Requirements
+   Clean interview dashboard including:
+
+* Start Interview button
+* Question display panel
+* Microphone recording button
+* Transcript display
+* Feedback panel
+* Score indicator
+* Next Question button
+
+8. File Structure
+
+project/
+app.py
+requirements.txt
+templates/
+index.html
+static/
+style.css
+script.js
+
+9. Backend Endpoints
+
+POST /start-interview
+Generates first question.
+
+POST /transcribe
+Converts voice input to text.
+
+POST /evaluate
+Sends answer to GPT and returns evaluation.
+
+10. GPT Evaluation Prompt
+
+The AI evaluator must respond using structured JSON:
+
+{
+score: number,
+strengths: "",
+improvements: "",
+sample_better_answer: ""
+}
+
+Evaluation should be realistic and helpful for Indian students preparing for interviews.
+
+11. Sample Prompt for GPT
+
+"You are a senior technical interviewer evaluating a candidate preparing for interviews in India. Evaluate the answer and give constructive feedback."
+
+12. Voice Output
+    The feedback should also be converted into speech so the AI interviewer speaks the response.
+
+13. Additional Enhancements
+    Add:
+
+* Interview timer
+* Progress tracker
+* Final performance report
+
+14. requirements.txt
+
+flask
+openai
+SpeechRecognition
+pyaudio
+gtts
+python-dotenv
+
+15. Environment Variables
+
+OPENAI_API_KEY=your_api_key
+
+16. UI Theme
+    Design the UI similar to a modern interview simulator dashboard with dark mode.
+
+17. Deliverables
+    Generate complete runnable code including:
+
+* Backend logic
+* Voice integration
+* GPT evaluation system
+* Frontend interface
+
+Ensure the code runs directly on Replit.

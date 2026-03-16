@@ -1,15 +1,18 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: AI Interview Practice Bot API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: interview
+    description: Interview session operations
+  - name: openai
+    description: OpenAI AI chat, image, and audio operations
 paths:
   /healthz:
     get:
@@ -24,6 +27,114 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+  /interview/start:
+    post:
+      operationId: startInterview
+      tags: [interview]
+      summary: Start a new interview session
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StartInterviewBody"
+      responses:
+        "200":
+          description: Interview started with first question
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/InterviewSession"
+  /interview/transcribe:
+    post:
+      operationId: transcribeAudio
+      tags: [interview]
+      summary: Transcribe audio to text
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TranscribeBody"
+      responses:
+        "200":
+          description: Transcription result
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TranscribeResponse"
+  /interview/evaluate:
+    post:
+      operationId: evaluateAnswer
+      tags: [interview]
+      summary: Evaluate an interview answer and get feedback
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/EvaluateBody"
+      responses:
+        "200":
+          description: Evaluation feedback
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/EvaluationResult"
+  /interview/next-question:
+    post:
+      operationId: getNextQuestion
+      tags: [interview]
+      summary: Get the next interview question
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NextQuestionBody"
+      responses:
+        "200":
+          description: Next question
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/QuestionResponse"
+  /interview/tts:
+    post:
+      operationId: textToSpeech
+      tags: [interview]
+      summary: Convert text to speech audio
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TTSBody"
+      responses:
+        "200":
+          description: Audio data in base64
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TTSResponse"
+  /interview/report:
+    post:
+      operationId: generateReport
+      tags: [interview]
+      summary: Generate final performance report
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ReportBody"
+      responses:
+        "200":
+          description: Final performance report
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PerformanceReport"
 components:
   schemas:
     HealthStatus:
@@ -33,4 +144,179 @@ components:
           type: string
       required:
         - status
-
+    StartInterviewBody:
+      type: object
+      properties:
+        domain:
+          type: string
+          enum: [software-developer, data-science, ai-ml, hr-behavioral, general-aptitude]
+        candidateName:
+          type: string
+      required:
+        - domain
+    InterviewSession:
+      type: object
+      properties:
+        sessionId:
+          type: string
+        domain:
+          type: string
+        firstQuestion:
+          type: string
+        questionNumber:
+          type: integer
+        totalQuestions:
+          type: integer
+      required:
+        - sessionId
+        - domain
+        - firstQuestion
+        - questionNumber
+        - totalQuestions
+    TranscribeBody:
+      type: object
+      properties:
+        audio:
+          type: string
+          description: Base64-encoded audio data
+      required:
+        - audio
+    TranscribeResponse:
+      type: object
+      properties:
+        text:
+          type: string
+      required:
+        - text
+    EvaluateBody:
+      type: object
+      properties:
+        question:
+          type: string
+        answer:
+          type: string
+        domain:
+          type: string
+        questionNumber:
+          type: integer
+      required:
+        - question
+        - answer
+        - domain
+        - questionNumber
+    EvaluationResult:
+      type: object
+      properties:
+        score:
+          type: number
+        strengths:
+          type: string
+        improvements:
+          type: string
+        sampleBetterAnswer:
+          type: string
+        feedbackText:
+          type: string
+      required:
+        - score
+        - strengths
+        - improvements
+        - sampleBetterAnswer
+        - feedbackText
+    NextQuestionBody:
+      type: object
+      properties:
+        domain:
+          type: string
+        questionNumber:
+          type: integer
+        previousQuestions:
+          type: array
+          items:
+            type: string
+      required:
+        - domain
+        - questionNumber
+        - previousQuestions
+    QuestionResponse:
+      type: object
+      properties:
+        question:
+          type: string
+        questionNumber:
+          type: integer
+        isLast:
+          type: boolean
+      required:
+        - question
+        - questionNumber
+        - isLast
+    TTSBody:
+      type: object
+      properties:
+        text:
+          type: string
+        voice:
+          type: string
+          enum: [alloy, echo, fable, onyx, nova, shimmer]
+      required:
+        - text
+    TTSResponse:
+      type: object
+      properties:
+        audio:
+          type: string
+          description: Base64-encoded MP3 audio
+      required:
+        - audio
+    ReportBody:
+      type: object
+      properties:
+        domain:
+          type: string
+        evaluations:
+          type: array
+          items:
+            $ref: "#/components/schemas/EvaluationResult"
+        questions:
+          type: array
+          items:
+            type: string
+        timeTaken:
+          type: integer
+          description: Time taken in seconds
+      required:
+        - domain
+        - evaluations
+        - questions
+    PerformanceReport:
+      type: object
+      properties:
+        overallScore:
+          type: number
+        totalQuestions:
+          type: integer
+        grade:
+          type: string
+        summary:
+          type: string
+        strongAreas:
+          type: array
+          items:
+            type: string
+        improvementAreas:
+          type: array
+          items:
+            type: string
+        recommendations:
+          type: array
+          items:
+            type: string
+      required:
+        - overallScore
+        - totalQuestions
+        - grade
+        - summary
+        - strongAreas
+        - improvementAreas
+        - recommendations

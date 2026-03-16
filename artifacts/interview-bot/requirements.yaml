@@ -1,0 +1,17 @@
+packages:
+  "framer-motion": "For smooth micro-interactions, page transitions, and recording/audio waveform animations"
+  "canvas-confetti": "To show celebration when the user completes the interview and gets their report"
+  "@types/canvas-confetti": "Types for canvas-confetti"
+  "clsx": "Utility for constructing className strings conditionally"
+  "tailwind-merge": "Utility for merging tailwind classes safely"
+  "@workspace/integrations-openai-ai-react": "For microphone access via useVoiceRecorder as requested"
+
+images:
+  - path: "artifacts/interview-bot/public/images/hero-bg.png"
+    description: "Abstract deep navy and electric blue gradient mesh with subtle technical grid lines and glowing data nodes, high end corporate technology feel, dark mode"
+    aspect_ratio: "16:9"
+
+notes:
+  - Forced dark mode for the premium professional look requested.
+  - Relying on @workspace/api-client-react for TanStack Query hooks.
+  - Assuming useVoiceRecorder provides standard start(), stop(), and blob.
