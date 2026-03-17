@@ -158,17 +158,6 @@ http://localhost:5000
 
 ---
 
-# 📸 Future Enhancements
 
-Possible improvements for the project:
-
-* AI interviewer avatar
-* Emotion detection during interview
-* Resume-based question generation
-* Interview difficulty levels
-* Performance analytics dashboard
-* Multilingual support (English + Indian languages)
-
----
 
 
