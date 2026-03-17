@@ -171,12 +171,4 @@ Possible improvements for the project:
 
 ---
 
-# 🎓 Use Cases
-
-* Interview preparation for students
-* Placement training programs
-* Technical mock interviews
-* HR practice sessions
-
----
 
