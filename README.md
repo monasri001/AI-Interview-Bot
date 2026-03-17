@@ -142,20 +142,6 @@ Open the browser:
 ```
 http://localhost:5000
 ```
-
----
-
-# 🎯 How It Works
-
-1. User selects an interview domain.
-2. AI generates the first interview question.
-3. AI asks the question using voice.
-4. User answers using microphone.
-5. Speech is converted to text.
-6. AI evaluates the response.
-7. AI gives feedback and score.
-8. The next interview question appears.
-
 ---
 
 
